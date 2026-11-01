@@ -5,96 +5,135 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Расписание · ОГАПОУ «ВИТ»</title>
   <meta name="description" content="Расписание занятий ОГАПОУ «ВИТ»: группы, преподаватели, кабинеты, звонки">
-  <meta name="theme-color" content="#EEF2F8" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#0E1116" media="(prefers-color-scheme: dark)">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%235E9FE8'/><stop offset='1' stop-color='%23BF8EDA'/></linearGradient></defs><rect width='100' height='100' rx='26' fill='url(%23g)'/><text x='50' y='68' font-size='52' text-anchor='middle' fill='white' font-family='Arial' font-weight='700'>В</text></svg>">
-  <link rel="stylesheet" href="style.css">
+  <meta name="theme-color" content="#EDF1F8" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0D1015" media="(prefers-color-scheme: dark)">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="ВИТ">
+  <meta name="format-detection" content="telephone=no">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%235E9FE8'/><stop offset='1' stop-color='%239D7BEA'/></linearGradient></defs><rect width='100' height='100' rx='26' fill='url(%23g)'/><text x='50' y='68' font-size='52' text-anchor='middle' fill='white' font-family='Arial' font-weight='700'>В</text></svg>">
+  <!-- v=6: при обновлении app.js / style.css меняйте цифру, чтобы браузеры не брали старую версию -->
+  <link rel="stylesheet" href="style.css?v=6">
 </head>
 <body>
-  <div class="bg" aria-hidden="true"><i></i><i></i><i></i></div>
+  <div class="bg" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
 
   <header class="wrap head">
-    <div class="brand">
-      <span class="logo" aria-hidden="true">В</span>
-      <span>ОГАПОУ «ВИТ»</span>
-    </div>
-    <div class="actions">
-      <button class="icon glass" id="searchBtn" aria-label="Поиск по преподавателям и кабинетам">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+    <div class="toprow">
+      <button class="brand" id="brandBtn" type="button" aria-label="Моя группа — вся неделя">
+        <span class="logo" aria-hidden="true">В</span><span>ОГАПОУ «ВИТ»</span>
       </button>
-      <button class="icon glass" id="bellBtn" aria-label="Расписание звонков">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
-      </button>
+      <div class="clock" aria-label="Текущее время">
+        <span class="clock-t"><b id="clockHM">--:--</b><small id="clockS"></small></span>
+        <span class="clock-d" id="clockD"></span>
+      </div>
     </div>
-    <button class="title" id="titleBtn" aria-haspopup="dialog">
-      <span class="kicker" id="kicker">Расписание</span>
-      <span class="name"><span id="titleText">Выберите группу</span>
-        <svg class="chev" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
-      </span>
-    </button>
+    <div class="titlerow">
+      <button class="title" id="titleBtn" type="button" aria-haspopup="dialog">
+        <span class="kicker" id="kicker">Расписание</span>
+        <span class="name"><span id="titleText">Загрузка…</span>
+          <svg class="chev" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+        </span>
+      </button>
+      <nav class="actions" aria-label="Меню">
+        <button class="act glass" id="groupBtn" type="button">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <span>Группа</span>
+        </button>
+        <button class="act glass" id="searchBtn" type="button">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+          <span>Поиск</span>
+        </button>
+        <button class="act glass" id="bellBtn" type="button">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+          <span>Звонки</span>
+        </button>
+      </nav>
+    </div>
   </header>
 
-  <div class="bar" id="bar">
-    <div class="wrap bar-in glass">
-      <div class="bar-row">
-        <div class="weeknav" id="weekNav">
-          <button id="prev" class="arrow" aria-label="Предыдущая неделя"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
-          <span id="weekLabel"></span>
-          <button id="next" class="arrow" aria-label="Следующая неделя"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+  <div class="bar" id="bar" hidden>
+    <div class="wrap">
+      <div class="bar-in glass">
+        <div class="bar-row">
+          <div class="weeknav">
+            <button id="prev" class="arrow" type="button" aria-label="Предыдущая неделя"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+            <span id="weekLabel"></span>
+            <button id="next" class="arrow" type="button" aria-label="Следующая неделя"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+          </div>
+          <div class="seg" id="modeSeg" data-mode="week" role="tablist" aria-label="Вид">
+            <span class="thumb"></span>
+            <button type="button" data-mode="week" role="tab">Неделя</button>
+            <button type="button" data-mode="day" role="tab">День</button>
+          </div>
         </div>
-        <div class="seg" id="modeSeg" role="tablist" aria-label="Вид">
-          <span class="thumb"></span>
-          <button data-mode="week" role="tab">Неделя</button>
-          <button data-mode="day" role="tab">День</button>
-        </div>
+        <div class="tabs" id="tabs" role="tablist" aria-label="Дни недели" hidden></div>
       </div>
-      <nav class="tabs" id="tabs" role="tablist" aria-label="Дни недели"></nav>
     </div>
   </div>
 
   <main class="wrap" id="main">
-    <p class="note glass" id="note"></p>
-    <section id="view" aria-live="polite"></section>
+    <p class="note glass" id="note" hidden></p>
+    <section id="view" aria-live="polite"><p class="empty-msg">Загрузка…</p></section>
   </main>
 
-  <footer class="wrap foot">Время московское · Нажмите на день, чтобы открыть подробно</footer>
+  <footer class="wrap foot">by b1tr1x</footer>
 
-  <!-- Поиск / выбор группы -->
   <div class="sheet" id="findSheet" hidden>
     <div class="sheet-bg" data-close></div>
     <div class="sheet-box glass-strong" role="dialog" aria-modal="true" aria-labelledby="findTitle">
       <div class="sheet-head">
         <h2 id="findTitle">Поиск</h2>
-        <button class="x" data-close aria-label="Закрыть"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+        <button class="x" type="button" data-close aria-label="Закрыть"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
       </div>
       <label class="searchbox">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
-        <input id="q" type="search" placeholder="Группа, преподаватель или кабинет" autocomplete="off">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <input id="q" type="search" placeholder="Группа, преподаватель или кабинет" autocomplete="off" enterkeyhint="search">
       </label>
       <div class="chips" id="filters">
-        <button data-f="all">Все</button>
-        <button data-f="group">Группы</button>
-        <button data-f="teacher">Преподаватели</button>
-        <button data-f="room">Кабинеты</button>
+        <button type="button" data-f="all">Все</button>
+        <button type="button" data-f="group">Группы</button>
+        <button type="button" data-f="teacher">Преподаватели</button>
+        <button type="button" data-f="room">Кабинеты</button>
       </div>
       <div class="results" id="results"></div>
     </div>
   </div>
 
-  <!-- Звонки -->
   <div class="sheet" id="bellSheet" hidden>
     <div class="sheet-bg" data-close></div>
     <div class="sheet-box glass-strong" role="dialog" aria-modal="true" aria-labelledby="bellTitle">
       <div class="sheet-head">
         <h2 id="bellTitle">Звонки</h2>
-        <button class="x" data-close aria-label="Закрыть"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+        <button class="x" type="button" data-close aria-label="Закрыть"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
       </div>
       <p class="sheet-sub" id="bellSub"></p>
       <div class="results" id="bellList"></div>
     </div>
   </div>
 
-  <script src="groups.js"></script>
-  <script src="app.js"></script>
+  <script>
+    // Показываем понятную ошибку вместо пустой страницы
+    window.__showError = function (msg) {
+      var v = document.getElementById("view");
+      if (v) v.innerHTML = '<div class="free glass"><b>Что-то пошло не так</b>' + msg +
+        '<br><br>Обновите страницу (на ПК — Ctrl+F5). Если не помогло — проверьте, что на GitHub загружены все файлы.</div>';
+    };
+    window.addEventListener("error", function (e) {
+      if (e && e.target && e.target.tagName === "SCRIPT") return;
+      window.__showError("Ошибка: " + (e && e.message ? e.message : "неизвестная"));
+    });
+    // Загружаем свежие версии файлов (не из старого кэша)
+    (function () {
+      var v = Math.floor(Date.now() / 3e5);
+      function load(src, done) {
+        var s = document.createElement("script");
+        s.src = src + "?v=" + v;
+        s.onload = done;
+        s.onerror = function () { window.__showError("Не найден файл <b>" + src + "</b>."); };
+        document.body.appendChild(s);
+      }
+      load("groups.js", function () { load("app.js", function () {}); });
+    })();
+  </script>
 </body>
 </html>
