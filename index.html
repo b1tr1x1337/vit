@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Расписание · ОГАПОУ «ВИТ»</title>
+  <meta name="description" content="Расписание занятий ОГАПОУ «ВИТ»">
+  <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#191919" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%232783DE'/><text x='50' y='68' font-size='52' text-anchor='middle' fill='white' font-family='Arial' font-weight='700'>В</text></svg>">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="top">
+    <div class="wrap">
+      <p class="org">ОГАПОУ «ВИТ» · Расписание</p>
+      <button id="groupBtn" class="groupbtn" aria-haspopup="dialog">
+        <span id="groupName">Выберите группу</span><svg class="chev" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="week" id="weekBar">
+        <button id="prev" class="arrow" aria-label="Предыдущая неделя">‹</button>
+        <span id="weekLabel"></span>
+        <button id="next" class="arrow" aria-label="Следующая неделя">›</button>
+      </div>
+    </div>
+    <nav class="wrap tabs" id="tabs" role="tablist" aria-label="Дни недели"></nav>
+  </header>
+
+  <main class="wrap">
+    <p class="note" id="note"></p>
+    <section id="day" aria-live="polite"></section>
+  </main>
+
+  <footer class="wrap foot">Время — московское.</footer>
+
+  <div class="sheet" id="sheet" hidden>
+    <div class="sheet-bg" data-close></div>
+    <div class="sheet-box" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+      <div class="sheet-head">
+        <h2 id="sheetTitle">Ваша группа</h2>
+        <button class="x" data-close aria-label="Закрыть"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      </div>
+      <input id="search" type="search" placeholder="Поиск: 12 Э" autocomplete="off" inputmode="search">
+      <div id="groupList" class="glist"></div>
+    </div>
+  </div>
+
+  <script src="groups.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
