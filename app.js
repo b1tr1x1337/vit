@@ -271,12 +271,57 @@
   function openSheet(id) { closeSheets(true); $(id).hidden = false; document.body.classList.add("lock"); }
   function closeSheets(force) {
     if (!force && !S.ent) return;
+    if (document.activeElement === $("q")) $("q").blur();
     $("findSheet").hidden = true; $("bellSheet").hidden = true;
-    document.body.classList.remove("lock");
+    document.body.classList.remove("lock", "kb");
   }
   [].forEach.call(document.querySelectorAll(".sheet"), function (s) {
     s.addEventListener("click", function (e) { if (e.target.closest("[data-close]")) closeSheets(); });
   });
+
+  // ---------- окна над клавиатурой (телефоны) ----------
+  // Окно занимает только видимую часть экрана, поэтому клавиатура его не закрывает.
+  var VV = window.visualViewport, rootEl = document.documentElement;
+  var fullH = 0, fullW = 0; // высота экрана без клавиатуры
+  function fitViewport() {
+    var h = VV ? VV.height : window.innerHeight, top = VV ? VV.offsetTop : 0;
+    rootEl.style.setProperty("--vv-h", Math.round(h) + "px");
+    rootEl.style.setProperty("--vv-top", Math.round(top) + "px");
+    var typing = document.activeElement === $("q");
+    if (window.innerWidth !== fullW) { fullW = window.innerWidth; fullH = 0; }
+    if (!typing || !fullH) fullH = Math.max(fullH, window.innerHeight, rootEl.clientHeight);
+    var visible = VV ? VV.height * (VV.scale || 1) : window.innerHeight;
+    document.body.classList.toggle("kb", typing && fullH - visible > 150);
+  }
+  if (VV) { VV.addEventListener("resize", fitViewport); VV.addEventListener("scroll", fitViewport); }
+  window.addEventListener("resize", fitViewport);
+  window.addEventListener("orientationchange", function () { setTimeout(fitViewport, 300); });
+  $("q").addEventListener("focus", function () { fitViewport(); setTimeout(fitViewport, 350); });
+  $("q").addEventListener("blur", function () { setTimeout(fitViewport, 50); });
+  // Листаешь результаты — клавиатура убирается, чтобы было видно больше
+  var ry = null;
+  $("results").addEventListener("touchstart", function (e) { ry = e.touches[0].clientY; }, { passive: true });
+  $("results").addEventListener("touchmove", function (e) {
+    if (ry !== null && Math.abs(e.touches[0].clientY - ry) > 12 && document.activeElement === $("q")) { $("q").blur(); ry = null; }
+  }, { passive: true });
+  fitViewport();
+
+  // ---------- тема (по умолчанию тёмная) ----------
+  function curTheme() { return rootEl.getAttribute("data-theme") === "light" ? "light" : "dark"; }
+  function applyTheme(t, animate) {
+    var go = function () {
+      rootEl.setAttribute("data-theme", t);
+      var m = $("themeColor"); if (m) m.setAttribute("content", t === "light" ? "#EDF1F8" : "#0D1015");
+      $("themeBtn").setAttribute("aria-label", t === "light" ? "Включить тёмную тему" : "Включить светлую тему");
+    };
+    var calm = window.matchMedia && window.matchMedia("(prefers-reduced-motion:reduce)").matches;
+    if (animate && !calm && document.startViewTransition) document.startViewTransition(go); else go();
+  }
+  $("themeBtn").addEventListener("click", function () {
+    var t = curTheme() === "dark" ? "light" : "dark";
+    LS.set("vit-theme", t); applyTheme(t, true);
+  });
+  applyTheme(LS.get("vit-theme") === "light" ? "light" : "dark", false);
 
   // ---------- поиск и выбор группы ----------
   var index = null;
@@ -302,6 +347,7 @@
     $("findTitle").textContent = filter === "group" ? "Выбор группы" : "Поиск";
     $("q").placeholder = filter === "group" ? "Номер группы, например 12 Э" : "Группа, преподаватель или кабинет";
     openSheet("findSheet");
+    fitViewport();
     renderResults();
     if (filter !== "group" || window.matchMedia("(hover:hover)").matches) setTimeout(function () { $("q").focus(); }, 60);
     if (filter !== "group") loadAll().then(function () { buildIndex(); renderResults(); });
@@ -340,6 +386,7 @@
       }
     }
     $("results").innerHTML = html || '<p class="empty-msg">Ничего не найдено</p>';
+    $("results").scrollTop = 0;
   }
   $("q").addEventListener("input", renderResults);
   $("q").addEventListener("keydown", function (e) { if (e.key === "Enter") { var b = $("results").querySelector("[data-h]"); if (b) b.click(); } });

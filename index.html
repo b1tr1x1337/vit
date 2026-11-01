@@ -1,18 +1,27 @@
 <!doctype html>
-<html lang="ru">
+<html lang="ru" data-theme="dark">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
   <title>Расписание · ОГАПОУ «ВИТ»</title>
   <meta name="description" content="Расписание занятий ОГАПОУ «ВИТ»: группы, преподаватели, кабинеты, звонки">
-  <meta name="theme-color" content="#EDF1F8" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#0D1015" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" id="themeColor" content="#0D1015">
+  <meta name="color-scheme" content="dark light">
+  <script>
+    // Тема: по умолчанию тёмная, выбор запоминается
+    (function () {
+      var t = "dark";
+      try { if (localStorage.getItem("vit-theme") === "light") t = "light"; } catch (e) {}
+      document.documentElement.setAttribute("data-theme", t);
+      document.getElementById("themeColor").setAttribute("content", t === "light" ? "#EDF1F8" : "#0D1015");
+    })();
+  </script>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="ВИТ">
   <meta name="format-detection" content="telephone=no">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%235E9FE8'/><stop offset='1' stop-color='%239D7BEA'/></linearGradient></defs><rect width='100' height='100' rx='26' fill='url(%23g)'/><text x='50' y='68' font-size='52' text-anchor='middle' fill='white' font-family='Arial' font-weight='700'>В</text></svg>">
-  <!-- v=6: при обновлении app.js / style.css меняйте цифру, чтобы браузеры не брали старую версию -->
-  <link rel="stylesheet" href="style.css?v=6">
+  <!-- v=7: при обновлении app.js / style.css меняйте цифру, чтобы браузеры не брали старую версию -->
+  <link rel="stylesheet" href="style.css?v=7">
 </head>
 <body>
   <div class="bg" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
@@ -22,9 +31,15 @@
       <button class="brand" id="brandBtn" type="button" aria-label="Моя группа — вся неделя">
         <span class="logo" aria-hidden="true">В</span><span>ОГАПОУ «ВИТ»</span>
       </button>
-      <div class="clock" aria-label="Текущее время">
-        <span class="clock-t"><b id="clockHM">--:--</b><small id="clockS"></small></span>
-        <span class="clock-d" id="clockD"></span>
+      <div class="tr-right">
+        <div class="clock" aria-label="Текущее время">
+          <span class="clock-t"><b id="clockHM">--:--</b><small id="clockS"></small></span>
+          <span class="clock-d" id="clockD"></span>
+        </div>
+        <button class="themebtn glass" id="themeBtn" type="button" aria-label="Включить светлую тему" title="Сменить тему">
+          <svg class="ic-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6l1.4 1.4M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4L6 18M18 6l1.4-1.4"/></svg>
+          <svg class="ic-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 14.2A8.5 8.5 0 1 1 9.8 3.5a6.8 6.8 0 0 0 10.7 10.7z"/></svg>
+        </button>
       </div>
     </div>
     <div class="titlerow">
@@ -80,7 +95,7 @@
 
   <div class="sheet" id="findSheet" hidden>
     <div class="sheet-bg" data-close></div>
-    <div class="sheet-box glass-strong" role="dialog" aria-modal="true" aria-labelledby="findTitle">
+    <div class="sheet-box sheet-find glass-strong" role="dialog" aria-modal="true" aria-labelledby="findTitle">
       <div class="sheet-head">
         <h2 id="findTitle">Поиск</h2>
         <button class="x" type="button" data-close aria-label="Закрыть"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
